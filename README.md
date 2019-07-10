@@ -1,10 +1,10 @@
 # Jenkins Pipeline Shared Library
 
-This repository holds shared library for Jenkins Pipeline
+This repository holds a shared library for Jenkins Pipeline.
 
 ## Import Library
 
-The Jenkins library requires sophisticated operation on Jenkins objects, which requires to be setup as `Global Pipeline Libraries` to avoid extra `In-process Script Approval`.
+The Jenkins library requires sophisticated operation on Jenkins objects, which requires it to be setup as `Global Pipeline Libraries` to avoid extra `In-process Script Approval`.
 
 ### Configure Jenkins Pipeline Job
 
@@ -31,33 +31,33 @@ github.commit('my test')
 
 ## Run Tests
 
-To start test, run gradle command `gradle test`.
+To start tests, run the gradle command `gradle test`.
 
 ## Generate Documentation
 
-Run gradle command `gradle groovydoc` to generate documentation.
+Run the gradle command `gradle groovydoc` to generate documentation.
 
-## Relase Process Design
+## Release Process Design
 
-All below scenarios are based on `master` version `v2.3.4` as example, timestamp string example is `20190101000000`.
+All below scenarios are based on `master` version `v2.3.4` as the example, timestamp string example is `20190101000000`.
 
 ### Things We Want to Do
 
-- Allow every branches to publish artifacts for debugging purpose.
+- Allow all branches to publish artifacts for debugging purpose.
 - Release is only performed when we want to, so it's always started manually.
 
 ### Special Notes
 
-- The release stage doesn't have option to choose MINOR/MAJOR/SPECIFIC version bump. Those works should be handled in GitHub with Pull Requests.
-- The relase stage doesn't have manual approval option. We assume everything pushed into `master` branch is for release purpose and have been reviewed by Pull Request reviewers.
+- The release stage doesn't have option to choose MINOR/MAJOR/SPECIFIC version bump. Those actions should be handled in GitHub with Pull Requests.
+- The release stage doesn't have manual approval option. We assume everything pushed into `master` branch is for release purpose and have been reviewed by Pull Request reviewers.
 
 ### Release Options
 
 - For each pipeline, we have 2 build parameters are only available to branches which can do a `release`:
   - `Perform Release`: boolean, default is _false_.
-  - `Pre-Release String`: string, default is _empty_. This parameter will only be used if `Perform Release` is _true_. This parameter is required if the release is not happened on `master` or `v?.x/master` branch.
+  - `Pre-Release String`: string, default is _empty_. This parameter will only be used if `Perform Release` is _true_. This parameter is required if the release is not happening on `master` or `v?.x/master` branch.
 - By default, only `master`, `v?.x/master`, `staging` and `v?.x/staging` branches can do a release. This can be changed by `pipeline.addReleaseBranches(...branches)` or `pipeline.setReleaseBranches(...branches)`.
-- For NPM packages, each branch can have a npm publish tag name when performaing release build. By default, `master`'s tag is `latest`, `staging`'s tag is `dev`. For branches do not have publish tag defined, or branches is not in release build, npm publish will use default `snapshot` tag name, and the version will have normalized branch name included. For example, `staging` branch **non-release** build will generate a version `v2.3.4-staging-snapshot.20190101000000` release on `snapshot` npm tag. `staging` branch **release** build will generate a version `v2.3.4-dev.20190101000000` release on `dev` tag. And a branch `feature/lts` build will generate a version `v2.3.4-feature-lts-snapshot.20190101000000` release on `snapshot` tag.
+- For NPM packages, each branch can have a npm publish tag name when performing release build. By default, `master`'s tag is `latest`, `staging`'s tag is `dev`. For branches that do not have a publish tag defined, or branches not in the release build, npm publish will use the default `snapshot` tag name, and the version will have the normalized branch name included. For example, `staging` branch **non-release** build will generate a version `v2.3.4-staging-snapshot.20190101000000` release on `snapshot` npm tag. `staging` branch **release** build will generate a version `v2.3.4-dev.20190101000000` release on `dev` tag. And a branch `feature/lts` build will generate a version `v2.3.4-feature-lts-snapshot.20190101000000` release on `snapshot` tag.
 - For pax/zip packages, each branch can also have a release tag name. By default, `master`'s tag is 'snapshot'. If it's not defined, artifactory publish will use branch name as tag name. For example, `master` **non-release** build will publish artifact to `libs-snapshot-local/org/zowe/<component>/2.3.4-snapshot/` and **release** build will publish to `libs-release-local/org/zowe/<component>/2.3.4/`. `staging` **non-release** build will publish artifact to `libs-snapshot-local/org/zowe/<component>/2.3.4-staging/` and **release** build will publish to `libs-release-local/org/zowe/<component>/2.3.4-rc1/`, the `rc1` is the pre-release string which is required.
 
 ### Pipeline Build Scenarios
